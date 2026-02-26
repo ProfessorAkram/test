@@ -1,23 +1,31 @@
 #!/bin/sh
 
+# ---------------------------------------------------------
+# 1. PREPARE COMMIT DATA
+# ---------------------------------------------------------
+# Git passes the path to the temporary commit message file as the first argument ($1)
 COMMIT_MSG_FILE=$1
 COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
 
-# Allowed commit types
+# ---------------------------------------------------------
+# 2. DEFINE VALIDATION RULES
+# ---------------------------------------------------------
+# Allowed commit types based on the project's system architecture categories
 TYPES="init|feat|fix|docs|refactor|test|chore|opt|build|revert|hotfix"
 
-# Pattern: type: short description
+# Pattern: Starts with a type, followed by a colon and a space (e.g., feat: description)
 PATTERN="^($TYPES): .+"
 
+# ---------------------------------------------------------
+# 3. ENFORCE MESSAGE FORMAT
+# ---------------------------------------------------------
 if ! echo "$COMMIT_MSG" | grep -Eq "$PATTERN"; then
+  echo "===================================================="
+  echo "❌ INVALID COMMIT MESSAGE FORMAT"
+  echo "===================================================="
+  echo "Expected format: <type>: <short description>"
   echo ""
-  echo "❌ Invalid commit message format."
-  echo ""
-  echo "Expected format:"
-  echo "  <type>: <short description>"
-  echo ""
-  echo "Choose the type based on what you DID:"
-  echo ""
+  echo "Choose a type based on your intent:"
   echo "  init     - first-time setup or initialization"
   echo "  feat     - added new behavior, system, class, or content"
   echo "  fix      - fixed a bug, typo, broken logic, or placement"
@@ -31,13 +39,13 @@ if ! echo "$COMMIT_MSG" | grep -Eq "$PATTERN"; then
   echo "  revert   - undo a previous commit"
   echo ""
   echo "Examples:"
-  echo "  feat: add health regeneration system"
-  echo "  fix: correct enemy spawn location"
-  echo "  refactor: reorganize AI scripts by behavior"
-  echo "  docs: update README with setup instructions"
-  echo ""
+    echo "  feat: add player health bars"
+    echo "  fix: correct enemy spawn location"
+    echo "  refactor: reorganize AI scripts by behavior"
+    echo "  docs: update README with setup instructions"
+  echo "----------------------------------------------------"
   echo "Tip: Ask yourself — why does this commit exist?"
-  echo ""
+  echo "===================================================="
   exit 1
 fi
 

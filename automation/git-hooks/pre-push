@@ -1,0 +1,43 @@
+﻿#!/bin/bash
+
+# Get the current branch name
+local_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+# Your specific branch categories
+valid_prefixes="feature|refactor|release|experiment"
+
+# ---------------------------------------------------------
+# 1. PROTECT STABLE & STAGING BRANCHES
+# ---------------------------------------------------------
+# We protect 'main' (the Gold Master) and 'release' (the Testing Ground)
+if [[ "$local_branch" == "main" || "$local_branch" == "release" ]]; then
+    echo "----------------------------------------------------"
+    echo "❌ PUSH DENIED: You cannot push directly to '$local_branch'."
+    echo ""
+    echo "Workflow Rule:"
+    echo "1. Work on a feature/ or refactor/ branch."
+    echo "2. Open a Pull Request to merge into 'release'."
+    echo "3. Once 'release' is stable, it will be merged to 'main'."
+    echo "----------------------------------------------------"
+    exit 1
+fi
+
+# ---------------------------------------------------------
+# 2. ENFORCE THE 4-CATEGORY SCHEMA
+# ---------------------------------------------------------
+if [[ ! $local_branch =~ ^($valid_prefixes)/[a-z0-9-]+$ ]]; then
+    echo "----------------------------------------------------"
+    echo "❌ INVALID BRANCH NAME: '$local_branch'"
+    echo ""
+    echo "Your branch must use one of these four prefixes:"
+    echo "  feature/    (New systems or content)"
+    echo "  refactor/   (Major system restructuring)"
+    echo "  release/    (Milestone or final polish)"
+    echo "  experiment/ (Testing new ideas)"
+    echo ""
+    echo "Example: feature/inventory-system"
+    echo "----------------------------------------------------"
+    exit 1
+fi
+
+exit 0

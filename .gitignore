@@ -1,0 +1,23 @@
+# Windows system files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# VS Code
+.vscode/
+
+# JetBrains Rider / IntelliJ IDEA
+/.idea/
+*.iml
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+/nbproject/private/
+
+# Logs
+*.log
+*.log.*
